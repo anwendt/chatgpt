@@ -51,7 +51,7 @@ if ! kubectl get secret helm-secrets-private-keys -n argocd >/dev/null 2>&1; the
   exit 1
 fi
 
-KEY_DATA=$(kubectl get secret helm-secrets-private-keys -n argocd -o jsonpath='{.data.keys\.txt}' 2>/dev/null || true)
+KEY_DATA=$(kubectl get secret helm-secrets-private-keys -n argocd -o jsonpath='{.data.key\.txt}' 2>/dev/null || true)
 if [ -z "$KEY_DATA" ]; then
   echo "keys.txt not found in secret helm-secrets-private-keys." >&2
   exit 1
@@ -60,7 +60,7 @@ fi
 DECODED=$(echo "$KEY_DATA" | base64 -d)
 PRIVATE=$(echo "$DECODED" | grep -m1 'AGE-SECRET-KEY-' | sed 's/^private: *//')
 if [ -z "$PRIVATE" ]; then
-  echo "Could not extract private key from keys.txt." >&2
+  echo "Could not extract private key from key.txt." >&2
   exit 1
 fi
 
